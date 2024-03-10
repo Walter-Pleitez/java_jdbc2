@@ -2,8 +2,9 @@ package outlook.pleitez.jdbc.domain;
 
 import java.util.Date;
 
+//CLASE DE DOMINIO O IDENTIDAD (Tiene representacion en la BD)
 public class Producto {
-    private int idProducto;
+    private Long idProducto;
     private String nombreProducto;
     private Double precio;
     private Date fechaRegistro;
@@ -11,7 +12,7 @@ public class Producto {
     public Producto() {
     }
     //Eliminar por Id
-    public Producto(int idProducto) {
+    public Producto(Long idProducto) {
         this.idProducto = idProducto;
     }
     //Para Insertar un nuevo objeto
@@ -21,18 +22,18 @@ public class Producto {
         this.fechaRegistro = fechaRegistro;
     }
     //Para Modificar un registro
-    public Producto(int idProducto, String nombreProducto, Double precio, Date fechaRegistro) {
+    public Producto(Long idProducto, String nombreProducto, Double precio, Date fechaRegistro) {
         this.idProducto = idProducto;
         this.nombreProducto = nombreProducto;
         this.precio = precio;
         this.fechaRegistro = fechaRegistro;
     }
 
-    public int getIdProducto() {
+    public Long getIdProducto() {
         return idProducto;
     }
 
-    public void setIdProducto(int idProducto) {
+    public void setIdProducto(Long idProducto) {
         this.idProducto = idProducto;
     }
 
