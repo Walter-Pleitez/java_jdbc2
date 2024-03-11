@@ -1,6 +1,7 @@
 package outlook.pleitez.jdbc.datos;
 
 import java.sql.*;
+import java.util.Date;
 
 public class ConexionBD {
     private static final String jdbc_url = "jdbc:mysql://localhost:3306/java_curso";
