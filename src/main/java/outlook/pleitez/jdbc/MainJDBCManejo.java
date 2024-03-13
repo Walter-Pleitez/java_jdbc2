@@ -1,33 +1,44 @@
 package outlook.pleitez.jdbc;
 
+import outlook.pleitez.jdbc.datos.ConexionBD;
 import outlook.pleitez.jdbc.datos.ProductoDAO;
 import outlook.pleitez.jdbc.domain.Producto;
 
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Date;
-import java.util.List;
+
 
 public class MainJDBCManejo {
     public static void main(String[] args) throws SQLException {
-        ProductoDAO productoDAO = new ProductoDAO();
+        Producto producto = null;
+        Connection conexion = null;
 
-        //ELIMINAR REGISTRO
-        Producto productoEliminar = new Producto(7L);
-        productoDAO.Eliminar(productoEliminar);
+        try{
+            conexion = ConexionBD.getConnection();
+            if(conexion.getAutoCommit()){
+                conexion.setAutoCommit(false);
+            }
+            ProductoDAO productoDAO = new ProductoDAO(conexion);
 
-        //MODIFICAR UN REGISTRO
-        Producto productoUpdate = new Producto(6L, "Shampo", 1.50, new Date());
-        productoDAO.actualizar(productoUpdate);
+            Producto cambioProducto = new Producto();
+            cambioProducto.setIdProducto(14L);
+            cambioProducto.setNombreProducto("Alcohol Gel");
+            cambioProducto.setPrecio(5.00);
+            cambioProducto.setFechaRegistro( new Date());
+            productoDAO.actualizar(cambioProducto);
 
-        //INSERTANDO UN NUEVO OBJETO DE TIPO PRODUCTO
-        Producto productoNuevo = new Producto("Jabon Liquido", 1.25, new Date());
-        productoDAO.insertar(productoNuevo);
+            Producto nuevoProducto = new Producto();
+            nuevoProducto.setNombreProducto("Crema antiarrugas");
+            nuevoProducto.setPrecio(1.25);
+            nuevoProducto.setFechaRegistro(new Date());
+            productoDAO.insertar(nuevoProducto);
 
-        List<Producto> productos = productoDAO.seleccionar();
+            conexion.commit();
 
-        for(Producto producto: productos){
-            System.out.println("Producto -> " + producto);
+        }catch(SQLException e){
+            e.printStackTrace();
+            System.out.println("Entramos al Rollback");
+            conexion.rollback();
         }
-
     }
 }

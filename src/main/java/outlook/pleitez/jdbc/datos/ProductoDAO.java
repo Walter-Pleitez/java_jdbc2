@@ -31,11 +31,11 @@ public class ProductoDAO {
         List<Producto> productos = new ArrayList<>();
 
         try {
-            conn = this.connTransaccional != null? this.connTransaccional:ConexionBD.getConnection();
+            conn = this.connTransaccional != null ? this.connTransaccional : ConexionBD.getConnection();
             pstmt = conn.prepareStatement(sqlSelect);
             rs = pstmt.executeQuery();
 
-            while(rs.next()){
+            while (rs.next()) {
                 Long id = rs.getLong("id_producto");
                 String nombre = rs.getString("nombre");
                 Double precio = rs.getDouble("precio");
@@ -44,9 +44,8 @@ public class ProductoDAO {
                 Producto producto = new Producto(id, nombre, precio, fechaRegistro);
                 productos.add(producto);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
+        }
+        finally {
             close(rs);
             close(pstmt);
             if(this.connTransaccional == null){
@@ -56,7 +55,7 @@ public class ProductoDAO {
 
         return productos;
     }
-    public int insertar(Producto producto){
+    public int insertar(Producto producto) throws SQLException {
         Connection conn = null;
         PreparedStatement pstmt = null;
         int registros = 0;
@@ -68,9 +67,7 @@ public class ProductoDAO {
             pstmt.setDouble(2, producto.getPrecio());
             pstmt.setDate(3, new Date(producto.getFechaRegistro().getTime()));
             registros = pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 close(pstmt);
                 if(this.connTransaccional == null){
@@ -98,9 +95,7 @@ public class ProductoDAO {
             pstmt.setDate(3, new Date(producto.getFechaRegistro().getTime()));
             pstmt.setLong(4, producto.getIdProducto());
             registros = pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 close(pstmt);
                 if(this.connTransaccional == null){
@@ -123,9 +118,7 @@ public class ProductoDAO {
 
             pstmt.setLong(1, producto.getIdProducto());
             registros = pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 close(pstmt);
                 if(this.connTransaccional == null){
