@@ -1,6 +1,6 @@
 package outlook.pleitez.jdbc.datos;
 
-import outlook.pleitez.jdbc.domain.Producto;
+import outlook.pleitez.jdbc.domain.ProductoDTO;
 
 import java.sql.*;
 import java.util.*;
@@ -9,7 +9,7 @@ import static outlook.pleitez.jdbc.datos.ConexionBD.close;
 import static outlook.pleitez.jdbc.datos.ConexionBD.getConnection;
 
 //Realizara las operaciones de Select, Insert o Delete pero sobre clase Producto (Los cambios estaran en BD)
-public class ProductoDAO {
+public class ProductoDaoJDBC implements ProductoDao {
     Connection connTransaccional;
     //variable con sentencia SQL
     private static final String sqlSelect = "SELECT id_producto, nombre, precio, fecha_registro FROM producto";
@@ -17,18 +17,19 @@ public class ProductoDAO {
     private static final String sqlUpdate = "UPDATE producto SET nombre = ?, precio = ?, fecha_registro= ? WHERE id_producto = ?";
     private static final String sqlDelete = "DELETE FROM producto WHERE id_producto = ?";
 
-    public ProductoDAO() {
+    public ProductoDaoJDBC() {
     }
-    public ProductoDAO(Connection connTransaccional) {
+    public ProductoDaoJDBC(Connection connTransaccional) {
         this.connTransaccional = connTransaccional;
     }
 
     //Metodo que devuelava lista de objetos de tipo producto
-    public List<Producto> seleccionar() throws SQLException {
+    @Override
+    public List<ProductoDTO> seleccionar() throws SQLException {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        List<Producto> productos = new ArrayList<>();
+        List<ProductoDTO> productos = new ArrayList<>();
 
         try {
             conn = this.connTransaccional != null ? this.connTransaccional : ConexionBD.getConnection();
@@ -41,7 +42,7 @@ public class ProductoDAO {
                 Double precio = rs.getDouble("precio");
                 Date fechaRegistro = rs.getDate("fecha_registro");
 
-                Producto producto = new Producto(id, nombre, precio, fechaRegistro);
+                ProductoDTO producto = new ProductoDTO(id, nombre, precio, fechaRegistro);
                 productos.add(producto);
             }
         }
@@ -55,7 +56,8 @@ public class ProductoDAO {
 
         return productos;
     }
-    public int insertar(Producto producto) throws SQLException {
+    @Override
+    public int insertar(ProductoDTO producto) throws SQLException {
         Connection conn = null;
         PreparedStatement pstmt = null;
         int registros = 0;
@@ -81,8 +83,8 @@ public class ProductoDAO {
         //AGREGAR CANTIDAD DE REGISTROS MODIFICADOS
         return 0;
     }
-
-    public int actualizar(Producto producto) throws SQLException {
+    @Override
+    public int actualizar(ProductoDTO producto) throws SQLException {
         Connection conn = this.connTransaccional != null? this.connTransaccional: ConexionBD.getConnection();
         PreparedStatement pstmt = null;
         int registros = 0;
@@ -108,7 +110,8 @@ public class ProductoDAO {
 
         return 0;
     }
-    public int Eliminar(Producto producto) throws SQLException {
+    @Override
+    public int Eliminar(ProductoDTO producto) throws SQLException {
         Connection conn = this.connTransaccional != null? this.connTransaccional: ConexionBD.getConnection();
         PreparedStatement pstmt = null;
         int registros = 0;

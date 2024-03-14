@@ -1,16 +1,17 @@
 package outlook.pleitez.jdbc;
 
 import outlook.pleitez.jdbc.datos.ConexionBD;
-import outlook.pleitez.jdbc.datos.ProductoDAO;
-import outlook.pleitez.jdbc.domain.Producto;
+import outlook.pleitez.jdbc.datos.ProductoDao;
+import outlook.pleitez.jdbc.datos.ProductoDaoJDBC;
+import outlook.pleitez.jdbc.domain.ProductoDTO;
 
 import java.sql.*;
-import java.util.Date;
+import java.util.List;
 
 
 public class MainJDBCManejo {
+
     public static void main(String[] args) throws SQLException {
-        Producto producto = null;
         Connection conexion = null;
 
         try{
@@ -18,22 +19,15 @@ public class MainJDBCManejo {
             if(conexion.getAutoCommit()){
                 conexion.setAutoCommit(false);
             }
-            ProductoDAO productoDAO = new ProductoDAO(conexion);
+            ProductoDao productoDAO = new ProductoDaoJDBC(conexion);
+            List<ProductoDTO> productos = productoDAO.seleccionar();
 
-            Producto cambioProducto = new Producto();
-            cambioProducto.setIdProducto(14L);
-            cambioProducto.setNombreProducto("Alcohol Gel");
-            cambioProducto.setPrecio(5.00);
-            cambioProducto.setFechaRegistro( new Date());
-            productoDAO.actualizar(cambioProducto);
-
-            Producto nuevoProducto = new Producto();
-            nuevoProducto.setNombreProducto("Crema antiarrugas");
-            nuevoProducto.setPrecio(1.25);
-            nuevoProducto.setFechaRegistro(new Date());
-            productoDAO.insertar(nuevoProducto);
+            for(ProductoDTO producto: productos){
+                System.out.println("Producto: " + producto);
+            }
 
             conexion.commit();
+            System.out.println("Se he hecho commit de la transaccion");
 
         }catch(SQLException e){
             e.printStackTrace();
